@@ -1,0 +1,12 @@
+:root {
+    --background-color: #181a1b;
+    --text-color: #e8e6e3;
+    --global-padding: 16px;
+}
+
+body {
+    font-family: 'Lato', sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    padding: var(--global-padding);
+}
