@@ -31,7 +31,6 @@ let pokemonRepository = (function () {
     };
 })();
 
-
 // Takes a pokemon object and writes it to the DOM while marking larger pokemon
 function writePokemon(pokemon) {
     const { name, height } = pokemon;
@@ -43,11 +42,6 @@ function writePokemon(pokemon) {
     }
 };
 
-// Calls the writePokemon function on all objects in pokemonRepository.pokemonList
-pokemonRepository.getAll().forEach(writePokemon);
-
-
-
 console.log(Object.keys(pokemonRepository));
 
 pokemonRepository.add({ name: 'Pikachu', height: 0.2, types: ['electric'] });
@@ -55,3 +49,7 @@ pokemonRepository.add({ name: 'Pikachu', height: 0.2, types: ['electric'] });
 console.log(pokemonRepository.getAll());
 
 console.log(pokemonRepository.find('Bulbasaur'));
+
+
+// Calls the writePokemon function on all objects in pokemonRepository.pokemonList
+pokemonRepository.getAll().forEach(writePokemon);
