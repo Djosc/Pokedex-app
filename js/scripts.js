@@ -1,3 +1,6 @@
+/**
+ * @typedef {{name: string, height: number, types: string[]}} Pokemon
+ */
 
 let pokemonRepository = (function () {
     let pokemonList = [
@@ -6,6 +9,12 @@ let pokemonRepository = (function () {
         { name: 'Squirtle', height: 0.5, types: ['water'] }
     ];
 
+    /**
+     * Takes a pokemon object and checks if it contains the correct properties,
+     * then adds it to the {@link pokemonList} array
+     * 
+     * @param {Pokemon} pokemon - {@link Pokemon} object
+     */
     function add(pokemon) {
         if ((typeof pokemon === 'object') &&
             'name' in pokemon && 'height' in pokemon && 'types' in pokemon) {
@@ -31,7 +40,11 @@ let pokemonRepository = (function () {
     };
 })();
 
-// Takes a pokemon object and writes it to the DOM while marking larger pokemon
+/**
+ * Takes a pokemon object and writes it to the DOM while marking larger pokemon
+ * 
+ * @param {Pokemon} pokemon - {@link Pokemon} object
+ */
 function writePokemon(pokemon) {
     const { name, height } = pokemon;
     if (height > 0.6) {
