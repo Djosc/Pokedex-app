@@ -7,8 +7,8 @@ let pokemonRepository = (function () {
     ];
 
     function add(pokemon) {
-        // if ((typeof pokemon === 'object') && Object.keys(pokemon).some(pokemon => 'name')) {
-        if ((typeof pokemon === 'object') && 'name', 'height', 'types' in pokemon) {
+        if ((typeof pokemon === 'object') &&
+            'name' in pokemon && 'height' in pokemon && 'types' in pokemon) {
             pokemonList.push(pokemon);
         }
         else {
@@ -49,7 +49,6 @@ pokemonRepository.add({ name: 'Pikachu', height: 0.2, types: ['electric'] });
 console.log(pokemonRepository.getAll());
 
 console.log(pokemonRepository.find('Bulbasaur'));
-
 
 // Calls the writePokemon function on all objects in pokemonRepository.pokemonList
 pokemonRepository.getAll().forEach(writePokemon);
