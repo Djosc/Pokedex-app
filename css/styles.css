@@ -28,8 +28,6 @@ li {
     cursor: pointer;
     display: inline-block;
     text-align: center;
-    justify-content: center;
-    align-items: center;
     font-family: inherit;
     background-color: var(--button-color);
     color: var(--text-color);
@@ -37,11 +35,12 @@ li {
     border-radius: 7px;
     font-size: 24px;
     font-weight: 600;
+    opacity: 0.8;
     transition: 0.5s opacity;
     transition: 0.4s ease-in-out;
 }
 
 .pokemon-button:hover {
     box-shadow: 2px 3px 3px #606466;
-    opacity: 0.8;
+    opacity: 1;
 }
