@@ -1,5 +1,6 @@
 :root {
     --background-color: #181a1b;
+    --button-color: #4a5155;
     --text-color: #e8e6e3;
     --global-padding: 16px;
 }
@@ -9,4 +10,38 @@ body {
     background-color: var(--background-color);
     color: var(--text-color);
     padding: var(--global-padding);
+}
+
+h1 {
+    margin-left: 40px;
+}
+
+li {
+    margin-bottom: 7px;
+}
+
+.pokemon-list {
+    list-style-type: none;
+}
+
+.pokemon-button {
+    cursor: pointer;
+    display: inline-block;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    font-family: inherit;
+    background-color: var(--button-color);
+    color: var(--text-color);
+    padding: 0px 15px 5px 15px;
+    border-radius: 7px;
+    font-size: 24px;
+    font-weight: 600;
+    transition: 0.5s opacity;
+    transition: 0.4s ease-in-out;
+}
+
+.pokemon-button:hover {
+    box-shadow: 2px 3px 3px #606466;
+    opacity: 0.8;
 }
