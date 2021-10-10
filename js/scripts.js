@@ -1,23 +1,19 @@
 /**
- * @typedef {{name: string, height: number, types: string[]}} Pokemon
+ * @typedef {{name: string, detailsUrl: string}} Pokemon
  */
 
 let pokemonRepository = (function () {
-    let pokemonList = [
-        { name: 'Bulbasaur', height: 0.7, types: ['grass', 'poison'] },
-        { name: 'Charmander', height: 0.6, types: ['fire'] },
-        { name: 'Squirtle', height: 0.5, types: ['water'] }
-    ];
+    let pokemonList = [];
+    let apiUrl = 'https://pokeapi.co/api/v2/pokemon/?limit=150';
 
     /**
-     * Takes a pokemon object and checks if it contains the correct properties,
-     * then adds it to the {@link pokemonList} array
+     * Takes a pokemon object and checks if it contains the correct keys,
+     * then adds it to the {@link pokemonList} array.
      * 
      * @param {Pokemon} pokemon - {@link Pokemon} object
      */
     function add(pokemon) {
-        if ((typeof pokemon === 'object') &&
-            'name' in pokemon && 'height' in pokemon && 'types' in pokemon) {
+        if ((typeof pokemon === 'object') && 'name' in pokemon && 'detailsUrl' in pokemon) {
             pokemonList.push(pokemon);
         }
         else {
@@ -34,7 +30,8 @@ let pokemonRepository = (function () {
     }
 
     function showDetails(pokemon) {
-        console.log(pokemon.name);
+        loadDetails(pokemon)
+            .then(() => console.log(pokemon)); 
     }
 
     function addEventListener(button, pokemon) {
@@ -45,11 +42,11 @@ let pokemonRepository = (function () {
 
     /**
      * Creates a list item containing a button that displays the pokemon's name and adds
-     * it to the DOM
+     * it to the DOM.
      * 
      * @param {Pokemon} pokemon - {@link Pokemon} object
      */
-    function addListItem(pokemon) {
+     function addListItem(pokemon) {
         let list = document.querySelector('.pokemon-list');
         let listItem = document.createElement('li');
         let button = document.createElement('button');
@@ -60,29 +57,66 @@ let pokemonRepository = (function () {
         addEventListener(button, pokemon);
     }
 
+    /**
+     * Fetches the full list of Pokemon from the pokeAPI, then creates a {@link Pokemon} object
+     *  for each one and calls {@link add} on it.
+     */
+    function loadList() {
+        return fetch(apiUrl)
+            .then((response) => { return response.json() })
+            .then((json) => {
+                json.results.forEach((item) => {
+                    let pokemon = {
+                        name: item.name,
+                        detailsUrl: item.url
+                    };
+                    add(pokemon);
+                });
+            })
+            .catch((e) => console.error(e));
+    }
+    
+    /**
+     * Fetches further details about a pokemon and adds the new keys (and info) to the 
+     * Pokemon object.
+     * 
+     * @see {@link showDetails} - function is called here
+     * @param {Pokemon} pokemon - {@link Pokemon} object
+     */
+    function loadDetails(pokemon) {
+        let url = pokemon.detailsUrl;
+        return fetch(url)
+            .then((response) => { return response.json() })
+            .then((details) => {
+                pokemon.imageUrl = details.sprites.front_default;
+                pokemon.height = details.height;
+                pokemon.types = details.types;
+            })
+            .catch((e) => console.error(e));
+    }
+
     return {
         add: add,
         getAll: getAll,
         find: find,
         showDetails: showDetails,
         addEventListener: addEventListener,
-        addListItem: addListItem
+        addListItem: addListItem,
+        loadList: loadList,
+        loadDetails: loadDetails
     };
 })();
 
-/**
- * Takes a pokemon object and calls {@link pokemonRepository.addListItem} on it
- * 
- * @param {Pokemon} pokemon - {@link Pokemon} object
- */
 function writePokemon(pokemon) {
     pokemonRepository.addListItem(pokemon);
-};
-
-// let writePokemon = (pokemon) => pokemonRepository.addListItem(pokemon);
-
-pokemonRepository.add({ name: 'Pikachu', height: 0.2, types: ['electric'] });
+}
 
 console.log(pokemonRepository.find('Bulbasaur'));
 
-pokemonRepository.getAll().forEach(writePokemon);
+pokemonRepository.loadList()
+    .then(() => {
+        pokemonRepository.getAll().forEach((pokemon) => pokemonRepository.addListItem(pokemon));
+    })
+    .catch((e) => console.log(`this broken`));
+
+// pokemonRepository.getAll().forEach(writePokemon);
