@@ -34,6 +34,22 @@ let pokemonRepository = (function () {
             .then(() => console.log(pokemon)); 
     }
 
+    function showLoadingMessage() {
+        let loadingDiv = document.querySelector('.loading-message');
+        let loadingText = document.createElement('h1');
+        loadingText.classList.add('loading-text');
+        loadingText.innerText = 'Loading...';
+        loadingDiv.appendChild(loadingText);
+    }
+
+    function hideLoadingMessage() {
+        let loadingDiv = document.querySelector('.loading-message');
+        let loadingText = document.querySelector('.loading-text');
+        // setTimeout here so you can actually see the loading message
+        // * will probably remove later
+        setTimeout(() => loadingDiv.removeChild(loadingText), 300);          
+    }
+
     function addEventListener(button, pokemon) {
         button.addEventListener('click', function (event) {
             showDetails(pokemon);
@@ -62,6 +78,7 @@ let pokemonRepository = (function () {
      *  for each one and calls {@link add} on it.
      */
     function loadList() {
+        showLoadingMessage();
         return fetch(apiUrl)
             .then((response) => { return response.json() })
             .then((json) => {
@@ -72,8 +89,12 @@ let pokemonRepository = (function () {
                     };
                     add(pokemon);
                 });
+                hideLoadingMessage();
             })
-            .catch((e) => console.error(e));
+            .catch((e) => { 
+                console.error(e);
+                hideLoadingMessage();
+            });
     }
     
     /**
@@ -84,6 +105,7 @@ let pokemonRepository = (function () {
      * @param {Pokemon} pokemon - {@link Pokemon} object
      */
     function loadDetails(pokemon) {
+        showLoadingMessage();
         let url = pokemon.detailsUrl;
         return fetch(url)
             .then((response) => { return response.json() })
@@ -91,8 +113,12 @@ let pokemonRepository = (function () {
                 pokemon.imageUrl = details.sprites.front_default;
                 pokemon.height = details.height;
                 pokemon.types = details.types;
+                hideLoadingMessage();
             })
-            .catch((e) => console.error(e));
+            .catch((e) => { 
+                console.error(e);
+                hideLoadingMessage();
+            });
     }
 
     return {
@@ -100,6 +126,8 @@ let pokemonRepository = (function () {
         getAll: getAll,
         find: find,
         showDetails: showDetails,
+        showLoadingMessage: showLoadingMessage,
+        hideLoadingMessage: hideLoadingMessage,
         addEventListener: addEventListener,
         addListItem: addListItem,
         loadList: loadList,
