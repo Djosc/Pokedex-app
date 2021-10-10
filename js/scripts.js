@@ -139,12 +139,8 @@ function writePokemon(pokemon) {
     pokemonRepository.addListItem(pokemon);
 }
 
-console.log(pokemonRepository.find('Bulbasaur'));
-
 pokemonRepository.loadList()
     .then(() => {
         pokemonRepository.getAll().forEach((pokemon) => pokemonRepository.addListItem(pokemon));
     })
     .catch((e) => console.log(`this broken`));
-
-// pokemonRepository.getAll().forEach(writePokemon);
