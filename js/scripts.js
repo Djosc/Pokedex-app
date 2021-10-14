@@ -47,7 +47,8 @@ let pokemonRepository = (function () {
         let loadingText = document.querySelector('.loading-text');
         // setTimeout here so you can actually see the loading message
         // * will probably remove later
-        setTimeout(() => loadingDiv.removeChild(loadingText), 300);          
+        setTimeout(() => loadingDiv.removeChild(loadingText), 300);    
+        // loadingDiv.removeChild(loadingText);      
     }
 
     function addEventListener(button, pokemon) {
@@ -57,27 +58,10 @@ let pokemonRepository = (function () {
     }
 
     /**
-     * Creates a list item containing a button that displays the pokemon's name and adds
-     * it to the DOM.
-     * 
-     * @param {Pokemon} pokemon - {@link Pokemon} object
-     */
-     function addListItem(pokemon) {
-        let list = document.querySelector('.pokemon-list');
-        let listItem = document.createElement('li');
-        let button = document.createElement('button');
-        button.innerText = pokemon.name;
-        button.classList.add('pokemon-button');
-        listItem.appendChild(button);
-        list.appendChild(listItem);
-        addEventListener(button, pokemon);
-    }
-
-    /**
      * Fetches the full list of Pokemon from the pokeAPI, then creates a {@link Pokemon} object
      *  for each one and calls {@link add} on it.
      */
-    function loadList() {
+     function loadList() {
         showLoadingMessage();
         return fetch(apiUrl)
             .then((response) => { return response.json() })
@@ -96,7 +80,51 @@ let pokemonRepository = (function () {
                 hideLoadingMessage();
             });
     }
-    
+
+    /**
+     * Calls {@link loadSprite} to get the imageUrl for each sprite.
+     * 
+     * Then it creates a list item containing a button that displays the pokemon's name and sprite,
+     *  then adds it to the DOM.
+     * 
+     * @param {Pokemon} pokemon - {@link Pokemon} object
+     */
+     function addListItem(pokemon) {
+        loadSprite(pokemon)
+            .then(() => {
+                const { name, imageUrl } = pokemon;
+
+                let list = document.querySelector('.pokemon-list');
+                let listItem = document.createElement('li');
+                let pokemonButton = document.createElement('button');
+                // pokemonButton.innerText = pokemon.name;
+                pokemonButton.innerHTML = `
+                    <img src="${imageUrl}" alt="${name}"/>
+                    <p>${name}</p>
+                `;
+
+                pokemonButton.classList.add('pokemon-button');
+                listItem.appendChild(pokemonButton);
+                list.appendChild(listItem);
+                addEventListener(pokemonButton, pokemon);
+            });
+    }
+
+    /**
+     * This function uses the detailsUrl from each pokemon to retrieve the imageUrl for the sprites
+     *  so they can be displayed on the main list.
+     * 
+     * @param {Pokemon} pokemon - {@link Pokemon} object
+     */
+    async function loadSprite(pokemon) {
+        let res = await fetch(pokemon.detailsUrl);
+        let resData = await res.json();
+        
+        pokemon.imageUrl = resData.sprites.front_default;
+
+        return resData;
+    }    
+
     /**
      * Fetches further details about a pokemon and adds the new keys (and info) to the 
      * Pokemon object.
@@ -122,6 +150,7 @@ let pokemonRepository = (function () {
     }
 
     return {
+        // * do i need all of these if some of them are only called internally? prob not
         add: add,
         getAll: getAll,
         find: find,
@@ -129,8 +158,9 @@ let pokemonRepository = (function () {
         showLoadingMessage: showLoadingMessage,
         hideLoadingMessage: hideLoadingMessage,
         addEventListener: addEventListener,
-        addListItem: addListItem,
         loadList: loadList,
+        addListItem: addListItem,
+        loadSprite: loadSprite,
         loadDetails: loadDetails
     };
 })();

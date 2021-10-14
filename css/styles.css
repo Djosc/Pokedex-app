@@ -13,11 +13,11 @@ body {
 }
 
 h1 {
-    margin-left: 40px;
+    text-align: center;
 }
 
 li {
-    margin-bottom: 7px;
+    padding: 0.5rem;
 }
 
 .loading-message {
@@ -30,22 +30,27 @@ li {
 
 .pokemon-list {
     list-style-type: none;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
 }
 
 .pokemon-button {
     cursor: pointer;
-    display: inline-block;
-    text-align: center;
+    width: 200px;
     font-family: inherit;
     background-color: var(--button-color);
     color: var(--text-color);
-    padding: 0px 15px 5px 15px;
+    padding: 1.5rem 0.5rem 0.5rem 0.5rem;
     border-radius: 7px;
     font-size: 24px;
     font-weight: 600;
     opacity: 0.8;
-    transition: 0.5s opacity;
-    transition: 0.4s ease-in-out;
+    transition: 0.3s opacity;
+    transition: 0.2s ease-in-out;
 }
 
 .pokemon-button:hover {
