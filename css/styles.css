@@ -115,6 +115,13 @@ li {
     height: 300px;
 }
 
+@media screen and (max-width: 600px) {
+    .pokemon-content img {
+        width: 150px;
+        height: 150px;
+    }
+}
+
 .pokemon-content span {
     text-align: left;
     padding-right: 3rem;
