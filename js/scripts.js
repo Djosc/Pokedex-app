@@ -31,7 +31,10 @@ let pokemonRepository = (function () {
 
     function showDetails(pokemon) {
         loadDetails(pokemon)
-            .then(() => console.log(pokemon)); 
+            .then(() => {
+                // console.log(pokemon);
+                showModal(pokemon);
+            }); 
     }
 
     function showLoadingMessage() {
@@ -82,7 +85,7 @@ let pokemonRepository = (function () {
     }
 
     /**
-     * Calls {@link loadSprite} to get the imageUrl for each sprite.
+     * Calls {@link loadSprite} to get the spriteUrl for each sprite.
      * 
      * Then it creates a list item containing a button that displays the pokemon's name and sprite,
      *  then adds it to the DOM.
@@ -92,14 +95,14 @@ let pokemonRepository = (function () {
      function addListItem(pokemon) {
         loadSprite(pokemon)
             .then(() => {
-                const { name, imageUrl } = pokemon;
+                const { name, spriteUrl } = pokemon;
 
                 let list = document.querySelector('.pokemon-list');
                 let listItem = document.createElement('li');
                 let pokemonButton = document.createElement('button');
                 // pokemonButton.innerText = pokemon.name;
                 pokemonButton.innerHTML = `
-                    <img src="${imageUrl}" alt="${name}"/>
+                    <img src="${spriteUrl}" alt="${name}"/>
                     <p>${name}</p>
                 `;
 
@@ -111,7 +114,7 @@ let pokemonRepository = (function () {
     }
 
     /**
-     * This function uses the detailsUrl from each pokemon to retrieve the imageUrl for the sprites
+     * This function uses the detailsUrl from each pokemon to retrieve the spriteUrl for the sprites
      *  so they can be displayed on the main list.
      * 
      * @param {Pokemon} pokemon - {@link Pokemon} object
@@ -120,7 +123,7 @@ let pokemonRepository = (function () {
         let res = await fetch(pokemon.detailsUrl);
         let resData = await res.json();
         
-        pokemon.imageUrl = resData.sprites.front_default;
+        pokemon.spriteUrl = resData.sprites.front_default;
 
         return resData;
     }    
@@ -138,7 +141,7 @@ let pokemonRepository = (function () {
         return fetch(url)
             .then((response) => { return response.json() })
             .then((details) => {
-                pokemon.imageUrl = details.sprites.front_default;
+                pokemon.artUrl = details.sprites.other.dream_world.front_default;
                 pokemon.height = details.height;
                 pokemon.types = details.types;
                 hideLoadingMessage();
@@ -148,6 +151,79 @@ let pokemonRepository = (function () {
                 hideLoadingMessage();
             });
     }
+
+    /**
+     * A small helper function to get the actual type names because they are nested a couple
+     * layers deep in types.
+     */
+    function getTypeNames(types) {
+        if (types.length > 1) {
+            return `${types[0].type.name}, ${types[1].type.name}`;
+        }
+        return types[0].type.name;
+    }
+
+    function showModal(pokemon) {
+        const { name, artUrl, height, types } = pokemon;
+
+        let typeNames = getTypeNames(types);
+
+        let modalContainer = document.querySelector('#modal-container');
+
+        // clear modal
+        modalContainer.innerHTML = '';
+
+        let modal = document.createElement('div');
+        modal.classList.add('modal');
+
+        // add modal content
+        let closeButtonEl = document.createElement('button');
+        closeButtonEl.classList.add('modal-close');
+        closeButtonEl.innerText = 'Close';
+        closeButtonEl.addEventListener('click', hideModal);
+
+        let titleEl = document.createElement('h1');
+        titleEl.innerText = name;
+
+        let contentEl = document.createElement('div');
+        contentEl.classList.add('pokemon-content');
+        contentEl.innerHTML = `
+            <img src="${artUrl}" alt="${name}"/>
+            <span>
+                Height: ${height}
+                </br>
+                </br>
+                Types: ${typeNames}
+            </span>
+        `;
+
+        modal.appendChild(closeButtonEl);
+        modal.appendChild(titleEl);
+        modal.appendChild(contentEl);
+        modalContainer.appendChild(modal);
+
+        modalContainer.classList.add('is-visible');
+    }
+
+    function hideModal() {
+        let modalContainer = document.querySelector('#modal-container');
+        modalContainer.classList.remove('is-visible');
+    }
+
+    window.addEventListener('keydown', (e) => {
+        let modalContainer = document.querySelector('#modal-container');
+        if (e.key === 'Escape' && modalContainer.classList.contains('is-visible')) {
+            hideModal();
+        }
+    })
+
+    window.addEventListener('click', (e) => {
+        let modalContainer = document.querySelector('#modal-container')
+        let target = e.target;
+        if (target === modalContainer) {
+            hideModal();
+        }
+    })
 
     return {
         // * do i need all of these if some of them are only called internally? prob not
@@ -161,7 +237,10 @@ let pokemonRepository = (function () {
         loadList: loadList,
         addListItem: addListItem,
         loadSprite: loadSprite,
-        loadDetails: loadDetails
+        loadDetails: loadDetails,
+        getTypeNames: getTypeNames,
+        showModal: showModal,
+        hideModal: hideModal,
     };
 })();
 
