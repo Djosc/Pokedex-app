@@ -186,6 +186,9 @@ li {
 .pokemon-info span.ghost {
     background-color: rgb(56, 56, 127);
 }
+.pokemon-info span.steel {
+    background-color: rgb(118, 118, 133);
+}
 .pokemon-info span.dragon {
     background-color: rgb(31, 15, 137);
 }

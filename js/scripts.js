@@ -204,6 +204,7 @@ let pokemonRepository = (function () {
         if (typeNames.includes('rock')) return 'rock';
         if (typeNames.includes('water')) return 'water';
         if (typeNames.includes('fairy')) return 'fairy';
+        if (typeNames.includes('steel')) return 'steel';
         else return 'types';
     }
 
