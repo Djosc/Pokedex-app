@@ -144,6 +144,7 @@ let pokemonRepository = (function () {
             .then((details) => {
                 // pokemon.artUrl = details.sprites.other.dream_world.front_default;
                 pokemon.artUrl = details.sprites.other['official-artwork'].front_default;
+                pokemon.id = details.id;
                 pokemon.height = details.height;
                 pokemon.weight = details.weight;
                 pokemon.types = details.types;
@@ -167,13 +168,29 @@ let pokemonRepository = (function () {
         }
         return types[0].type.name.charAt(0).toUpperCase() + types[0].type.name.slice(1);
     }
+    
+    function convertHeight(height) {
+        height = ((height / 10) * 3.28).toFixed(2);
+        return height % 1 === 0 ? Math.floor(height) : height;
+    }
 
+    function convertWeight(weight) {
+        weight = ((weight / 10) * 2.2).toFixed(1);
+        return weight % 1 === 0 ? Math.floor(weight) : weight;
+    }
+
+    /**
+     * This is called when a pokemon's button is clicked.
+     * Creates a modal popup and displays the pokemon's artwork and info 
+     * 
+     * @param {Pokemon} pokemon - {@link Pokemon} object
+     */
     function showModal(pokemon) {
-        let { name, artUrl, height, weight, types } = pokemon;
+        let { name, artUrl, id, height, weight, types } = pokemon;
         
         // convert values to feet and pounds
-        height = ((height / 10) * 3.28).toFixed(2);
-        weight = ((weight / 10) * 2.2).toFixed(1);
+        height = convertHeight(height);
+        weight = convertWeight(weight);
         
         let typeNames = getTypeNames(types);
         typeNames = typeNames.charAt(0).toUpperCase() + typeNames.slice(1);
@@ -193,7 +210,7 @@ let pokemonRepository = (function () {
         closeButtonEl.addEventListener('click', hideModal);
 
         let titleEl = document.createElement('h1');
-        titleEl.innerText = name;
+        titleEl.innerText = name + ` #${id}`;
 
         let contentEl = document.createElement('div');
         contentEl.classList.add('pokemon-content');
