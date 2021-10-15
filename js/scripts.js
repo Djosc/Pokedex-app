@@ -170,8 +170,14 @@ let pokemonRepository = (function () {
     }
     
     function convertHeight(height) {
-        height = ((height / 10) * 3.28).toFixed(2);
-        return height % 1 === 0 ? Math.floor(height) : height;
+        height = ((height / 10) * 3.28).toFixed(2); 
+        let whole = Math.floor(height);
+        let dec = Math.round((height - whole) * 12);
+        let returnString = ``;
+        if (dec === 12) { returnString = `${whole + 1}' 0"` }
+        else { returnString = `${whole}' ${dec}"` };
+        // return height % 1 === 0 ? whole : returnString;
+        return returnString;
     }
 
     function convertWeight(weight) {
@@ -188,10 +194,11 @@ let pokemonRepository = (function () {
     function showModal(pokemon) {
         let { name, artUrl, id, height, weight, types } = pokemon;
         
+        id = String(id).padStart(3, '0');
         // convert values to feet and pounds
         height = convertHeight(height);
         weight = convertWeight(weight);
-        
+
         let typeNames = getTypeNames(types);
         typeNames = typeNames.charAt(0).toUpperCase() + typeNames.slice(1);
 
@@ -217,7 +224,7 @@ let pokemonRepository = (function () {
         contentEl.innerHTML = `
             <img src="${artUrl}" alt="${name}"/>
             <div class="pokemon-info">
-                <span>Height: ${height} ft</span>
+                <span>Height: ${height}</span>
                 <span>Weight: ${weight} lbs</span>
                 <span>Types: ${typeNames}</span>
             </div
