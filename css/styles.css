@@ -86,9 +86,9 @@ li {
     width: 100%;
     max-width: 700px;
     text-align: center;
-  }
-  
-  .modal-close {
+}
+
+.modal-close {
     float: right;
     cursor: pointer;
     -webkit-appearance: none;
@@ -96,14 +96,14 @@ li {
     background: none;
     color: #777;
     text-decoration: underline;
-  }
-  
-  .modal h1 {
+}
+
+.modal h1 {
     margin-top: 0;
     padding-left: 3rem;
-    text-transform: uppercase;
-  }
-  
+    text-transform: uppercase; 
+}
+
 .pokemon-content {
     display: flex;
     align-items: center;

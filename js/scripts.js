@@ -64,7 +64,7 @@ let pokemonRepository = (function () {
      * Fetches the full list of Pokemon from the pokeAPI, then creates a {@link Pokemon} object
      *  for each one and calls {@link add} on it.
      */
-     function loadList() {
+    function loadList() {
         showLoadingMessage();
         return fetch(apiUrl)
             .then((response) => { return response.json() })
@@ -92,7 +92,7 @@ let pokemonRepository = (function () {
      * 
      * @param {Pokemon} pokemon - {@link Pokemon} object
      */
-     function addListItem(pokemon) {
+    function addListItem(pokemon) {
         loadSprite(pokemon)
             .then(() => {
                 const { name, spriteUrl } = pokemon;
@@ -170,14 +170,18 @@ let pokemonRepository = (function () {
     }
     
     function convertHeight(height) {
+        // convert height to feet w/ decimal
         height = ((height / 10) * 3.28).toFixed(2); 
-        let whole = Math.floor(height);
+        // separate out the decimal and convert to inches
+        let whole = Math.floor(height); 
         let dec = Math.round((height - whole) * 12);
+
         dec = String(dec).padStart(2, '0');
         let returnString = ``;
-        if (dec === 12) { returnString = `${whole + 1}' 0"` }
-        else { returnString = `${whole}' ${dec}"` };
-        // return height % 1 === 0 ? whole : returnString;
+        
+        if (dec === '12') returnString = `${whole + 1}' 0"`;
+        else returnString = `${whole}' ${dec}"`; 
+
         return returnString;
     }
 
