@@ -96,15 +96,13 @@ let pokemonRepository = (function () {
         loadSprite(pokemon)
             .then(() => {
                 const { name, spriteUrl } = pokemon;
-                let nameUpper = name.charAt(0).toUpperCase() + name.slice(1);
 
                 let list = document.querySelector('.pokemon-list');
                 let listItem = document.createElement('li');
                 let pokemonButton = document.createElement('button');
-                // pokemonButton.innerText = pokemon.name;
                 pokemonButton.innerHTML = `
-                    <img src="${spriteUrl}" alt="${nameUpper}"/>
-                    <p>${nameUpper}</p>
+                    <img src="${spriteUrl}" alt="${name}"/>
+                    <p>${name}</p>
                 `;
 
                 pokemonButton.classList.add('pokemon-button');
@@ -158,15 +156,13 @@ let pokemonRepository = (function () {
 
     /**
      * A small helper function to get the actual type names because they are nested a couple
-     * layers deep in types. Also capitalizes first letter.
+     * layers deep in types.
      */
     function getTypeNames(types) {
-        if (types.length > 1) {
-            let typeNameUpper1 = types[0].type.name.charAt(0).toUpperCase() + types[0].type.name.slice(1);
-            let typeNameUpper2 = types[1].type.name.charAt(0).toUpperCase() + types[1].type.name.slice(1);
-            return `${typeNameUpper1}, ${typeNameUpper2}`;
+        if (types.length > 1) { 
+            return `Types: ${types[0].type.name}, ${types[1].type.name}`; 
         }
-        return types[0].type.name.charAt(0).toUpperCase() + types[0].type.name.slice(1);
+        return `Type: ${types[0].type.name}`
     }
     
     function convertHeight(height) {
@@ -178,9 +174,8 @@ let pokemonRepository = (function () {
 
         dec = String(dec).padStart(2, '0');
         let returnString = ``;
-        
-        if (dec === '12') returnString = `${whole + 1}' 0"`;
-        else returnString = `${whole}' ${dec}"`; 
+        // round up inches to the next foot
+        returnString = dec === '12' ? `${whole + 1}' 00"` : `${whole}' ${dec}"`;
 
         return returnString;
     }
@@ -205,7 +200,6 @@ let pokemonRepository = (function () {
         weight = convertWeight(weight);
 
         let typeNames = getTypeNames(types);
-        typeNames = typeNames.charAt(0).toUpperCase() + typeNames.slice(1);
 
         let modalContainer = document.querySelector('#modal-container');
 
@@ -231,7 +225,7 @@ let pokemonRepository = (function () {
             <div class="pokemon-info">
                 <span>Height: ${height}</span>
                 <span>Weight: ${weight} lbs</span>
-                <span>Types: ${typeNames}</span>
+                <span class="types">${typeNames}</span>
             </div
         `;
 
@@ -239,7 +233,6 @@ let pokemonRepository = (function () {
         modal.appendChild(titleEl);
         modal.appendChild(contentEl);
         modalContainer.appendChild(modal);
-
         modalContainer.classList.add('is-visible');
     }
 
@@ -281,10 +274,6 @@ let pokemonRepository = (function () {
         hideModal: hideModal,
     };
 })();
-
-function writePokemon(pokemon) {
-    pokemonRepository.addListItem(pokemon);
-}
 
 pokemonRepository.loadList()
     .then(() => {

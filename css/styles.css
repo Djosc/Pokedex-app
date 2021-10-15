@@ -53,6 +53,10 @@ li {
     transition: 0.2s ease-in-out;
 }
 
+.pokemon-button p {
+    text-transform: capitalize;
+}
+
 .pokemon-button:hover {
     box-shadow: 2px 3px 3px #606466;
     opacity: 1;
@@ -123,6 +127,10 @@ li {
     grid-gap: 2rem;
     padding-right: 2rem;
     font-size: 24px;
+}
+
+.types {
+    text-transform: capitalize;
 }
 
 @media screen and (max-width: 600px) {
