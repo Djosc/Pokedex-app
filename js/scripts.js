@@ -216,15 +216,11 @@ let pokemonRepository = (function () {
         contentEl.classList.add('pokemon-content');
         contentEl.innerHTML = `
             <img src="${artUrl}" alt="${name}"/>
-            <span>
-                Height: ${height} ft
-                </br>
-                </br>
-                Weight: ${weight} lbs
-                </br>
-                </br>
-                Types: ${typeNames}
-            </span>
+            <div class="pokemon-info">
+                <span>Height: ${height} ft</span>
+                <span>Weight: ${weight} lbs</span>
+                <span>Types: ${typeNames}</span>
+            </div
         `;
 
         modal.appendChild(closeButtonEl);

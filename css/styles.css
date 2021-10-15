@@ -112,7 +112,7 @@ li {
 
 .pokemon-content img {
     width: 300px;
-    height: 300px;
+    height: 300px;padding-right: 2rem;
 }
 
 @media screen and (max-width: 600px) {
@@ -122,7 +122,26 @@ li {
     }
 }
 
+@media screen and (min-width: 1280px) {
+    .modal {
+        max-width: 950px;
+    }
+
+    .pokemon-content img {
+        width: 450px;
+        height: 450px;
+    }
+}
+
+.pokemon-info {
+    display: grid;
+    text-align: left;
+    grid-template-rows: repeat(3, 1fr);
+    grid-gap: 2rem;
+    padding-right: 2rem;
+}
+/* 
 .pokemon-content span {
     text-align: left;
     padding-right: 3rem;
-}
+} */
