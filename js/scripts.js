@@ -173,6 +173,7 @@ let pokemonRepository = (function () {
         height = ((height / 10) * 3.28).toFixed(2); 
         let whole = Math.floor(height);
         let dec = Math.round((height - whole) * 12);
+        dec = String(dec).padStart(2, '0');
         let returnString = ``;
         if (dec === 12) { returnString = `${whole + 1}' 0"` }
         else { returnString = `${whole}' ${dec}"` };
