@@ -32,7 +32,7 @@ let pokemonRepository = (function () {
     function showDetails(pokemon) {
         loadDetails(pokemon)
             .then(() => {
-                // console.log(pokemon);
+                console.log(pokemon);
                 showModal(pokemon);
             }); 
     }
@@ -160,9 +160,11 @@ let pokemonRepository = (function () {
      */
     function getTypeNames(types) {
         if (types.length > 1) { 
-            return `Types: ${types[0].type.name}, ${types[1].type.name}`; 
+            return `${types[0].type.name}, ${types[1].type.name}`; 
+            // return `Types: ${types[0].type.name}, ${types[1].type.name}`; 
         }
-        return `Type: ${types[0].type.name}`
+        return `${types[0].type.name}`;
+        // return `Type: ${types[0].type.name}`;
     }
     
     function convertHeight(height) {
@@ -183,6 +185,26 @@ let pokemonRepository = (function () {
     function convertWeight(weight) {
         weight = ((weight / 10) * 2.2).toFixed(1);
         return weight % 1 === 0 ? Math.floor(weight) : weight;
+    }
+
+    function colorType(typeNames) {
+        if (typeNames.includes('fire')) return 'fire';
+        if (typeNames.includes('bug')) return 'bug';
+        if (typeNames.includes('dragon')) return 'dragon';
+        if (typeNames.includes('electric')) return 'electric';
+        if (typeNames.includes('fighting')) return 'fighting';
+        if (typeNames.includes('flying')) return 'flying';
+        if (typeNames.includes('ghost')) return 'ghost';
+        if (typeNames.includes('grass')) return 'grass';
+        if (typeNames.includes('ground')) return 'ground';
+        if (typeNames.includes('ice')) return 'ice';
+        if (typeNames.includes('normal')) return 'normal';
+        if (typeNames.includes('poison')) return 'poison';
+        if (typeNames.includes('psychic')) return 'psychic';
+        if (typeNames.includes('rock')) return 'rock';
+        if (typeNames.includes('water')) return 'water';
+        if (typeNames.includes('fairy')) return 'fairy';
+        else return 'types';
     }
 
     /**
@@ -222,12 +244,32 @@ let pokemonRepository = (function () {
         contentEl.classList.add('pokemon-content');
         contentEl.innerHTML = `
             <img src="${artUrl}" alt="${name}"/>
-            <div class="pokemon-info">
-                <span>Height: ${height}</span>
-                <span>Weight: ${weight} lbs</span>
-                <span class="types">${typeNames}</span>
-            </div
         `;
+
+        let pokeInfoDiv = document.createElement('div');
+        pokeInfoDiv.classList.add('pokemon-info');
+        pokeInfoDiv.innerHTML = `
+            <span class="height">Height: ${height}</span>
+            <span class="weight">Weight: ${weight} lbs</span>
+        `;
+        contentEl.appendChild(pokeInfoDiv);
+
+        let typeSpanEl1 = document.createElement('span');
+        let typeSpanEl2 = document.createElement('span');
+        if (typeNames.includes(',')) {
+            let typeArr = typeNames.split(',')
+            typeSpanEl1.classList.add(colorType(typeArr[0]));
+            typeSpanEl2.classList.add(colorType(typeArr[1]));
+            typeSpanEl1.innerText = typeArr[0];
+            typeSpanEl2.innerText = typeArr[1];
+            pokeInfoDiv.appendChild(typeSpanEl1);
+            pokeInfoDiv.appendChild(typeSpanEl2);
+        }
+        else {
+            typeSpanEl1.classList.add(colorType(typeNames));
+            typeSpanEl1.innerText = typeNames;
+            pokeInfoDiv.appendChild(typeSpanEl1);
+        }
 
         modal.appendChild(closeButtonEl);
         modal.appendChild(titleEl);

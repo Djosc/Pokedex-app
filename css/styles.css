@@ -1,7 +1,7 @@
 :root {
     --background-color: #181a1b;
     --button-color: #4a5155;
-    --text-color: #e8e6e3;
+    --text-color: #f5f4f3;
     --global-padding: 16px;
 }
 
@@ -124,9 +124,70 @@ li {
     display: grid;
     text-align: left;
     grid-template-rows: repeat(3, 1fr);
+    /* grid-template-columns: ; */
     grid-gap: 2rem;
     padding-right: 2rem;
     font-size: 24px;
+}
+
+.pokemon-info span {
+    text-transform: capitalize;
+    text-align: center;
+    border-radius: 20px;
+    padding: 0.3rem;
+}
+
+.pokemon-info span.height, span.weight {
+    text-align: left;
+}
+
+.pokemon-info span.normal {
+    background-color: #6f7577;
+}
+.pokemon-info span.fire {
+    background-color: rgb(150, 85, 12);
+}
+.pokemon-info span.water {
+    background-color: rgb(0, 87, 173);
+}
+.pokemon-info span.electric {
+    background-color: rgb(165, 125, 4);
+}
+.pokemon-info span.grass {
+    background-color: rgb(88, 141, 42);
+}
+.pokemon-info span.ice {
+    background-color: rgb(0, 95, 143);
+}
+.pokemon-info span.fighting {
+    background-color: rgb(150, 68, 54);
+}
+.pokemon-info span.poison {
+    background-color: rgb(83, 15, 138);
+}
+.pokemon-info span.fairy {
+    background-color: rgb(190, 73, 201);
+}
+.pokemon-info span.ground {
+    background-color: rgb(145, 116, 29);
+}
+.pokemon-info span.flying {
+    background-color: rgb(92, 104, 182);
+}
+.pokemon-info span.psychic {
+    background-color: rgb(153, 0, 61);
+}
+.pokemon-info span.bug {
+    background-color: rgb(136, 150, 27);
+}
+.pokemon-info span.rock {
+    background-color: rgb(127, 113, 56);
+}
+.pokemon-info span.ghost {
+    background-color: rgb(56, 56, 127);
+}
+.pokemon-info span.dragon {
+    background-color: rgb(31, 15, 137);
 }
 
 .types {
