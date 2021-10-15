@@ -96,14 +96,15 @@ let pokemonRepository = (function () {
         loadSprite(pokemon)
             .then(() => {
                 const { name, spriteUrl } = pokemon;
+                let nameUpper = name.charAt(0).toUpperCase() + name.slice(1);
 
                 let list = document.querySelector('.pokemon-list');
                 let listItem = document.createElement('li');
                 let pokemonButton = document.createElement('button');
                 // pokemonButton.innerText = pokemon.name;
                 pokemonButton.innerHTML = `
-                    <img src="${spriteUrl}" alt="${name}"/>
-                    <p>${name}</p>
+                    <img src="${spriteUrl}" alt="${nameUpper}"/>
+                    <p>${nameUpper}</p>
                 `;
 
                 pokemonButton.classList.add('pokemon-button');
@@ -141,8 +142,10 @@ let pokemonRepository = (function () {
         return fetch(url)
             .then((response) => { return response.json() })
             .then((details) => {
-                pokemon.artUrl = details.sprites.other.dream_world.front_default;
+                // pokemon.artUrl = details.sprites.other.dream_world.front_default;
+                pokemon.artUrl = details.sprites.other['official-artwork'].front_default;
                 pokemon.height = details.height;
+                pokemon.weight = details.weight;
                 pokemon.types = details.types;
                 hideLoadingMessage();
             })
@@ -154,19 +157,26 @@ let pokemonRepository = (function () {
 
     /**
      * A small helper function to get the actual type names because they are nested a couple
-     * layers deep in types.
+     * layers deep in types. Also capitalizes first letter.
      */
     function getTypeNames(types) {
         if (types.length > 1) {
-            return `${types[0].type.name}, ${types[1].type.name}`;
+            let typeNameUpper1 = types[0].type.name.charAt(0).toUpperCase() + types[0].type.name.slice(1);
+            let typeNameUpper2 = types[1].type.name.charAt(0).toUpperCase() + types[1].type.name.slice(1);
+            return `${typeNameUpper1}, ${typeNameUpper2}`;
         }
-        return types[0].type.name;
+        return types[0].type.name.charAt(0).toUpperCase() + types[0].type.name.slice(1);
     }
 
     function showModal(pokemon) {
-        const { name, artUrl, height, types } = pokemon;
-
+        let { name, artUrl, height, weight, types } = pokemon;
+        
+        // convert values to feet and pounds
+        height = ((height / 10) * 3.28).toFixed(2);
+        weight = ((weight / 10) * 2.2).toFixed(1);
+        
         let typeNames = getTypeNames(types);
+        typeNames = typeNames.charAt(0).toUpperCase() + typeNames.slice(1);
 
         let modalContainer = document.querySelector('#modal-container');
 
@@ -190,7 +200,10 @@ let pokemonRepository = (function () {
         contentEl.innerHTML = `
             <img src="${artUrl}" alt="${name}"/>
             <span>
-                Height: ${height}
+                Height: ${height} ft
+                </br>
+                </br>
+                Weight: ${weight} lbs
                 </br>
                 </br>
                 Types: ${typeNames}
