@@ -225,7 +225,6 @@ let pokemonRepository = (function () {
         let typeNames = getTypeNames(types);
 
         let modalContainer = document.querySelector('#modal-container');
-
         // clear modal
         modalContainer.innerHTML = '';
 
@@ -252,7 +251,7 @@ let pokemonRepository = (function () {
         pokeInfoDiv.innerHTML = `
             <span class="height">Height: ${height}</span>
             <span class="weight">Weight: ${weight} lbs</span>
-        `;
+            `
         contentEl.appendChild(pokeInfoDiv);
 
         let typeSpanEl1 = document.createElement('span');
