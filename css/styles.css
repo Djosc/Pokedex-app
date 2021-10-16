@@ -148,7 +148,7 @@ li {
     background-color: rgb(150, 85, 12);
 }
 .pokemon-info span.water {
-    background-color: rgb(0, 87, 173);
+    background-color: rgb(5, 79, 153);
 }
 .pokemon-info span.electric {
     background-color: rgb(161, 159, 2);
@@ -157,7 +157,7 @@ li {
     background-color: rgb(88, 141, 42);
 }
 .pokemon-info span.ice {
-    background-color: rgb(0, 95, 143);
+    background-color: rgb(71, 143, 179);
 }
 .pokemon-info span.fighting {
     background-color: rgb(150, 68, 54);
@@ -169,7 +169,7 @@ li {
     background-color: rgb(190, 73, 201);
 }
 .pokemon-info span.ground {
-    background-color: rgb(145, 116, 29);
+    background-color: rgb(100, 77, 9);
 }
 .pokemon-info span.flying {
     background-color: rgb(92, 104, 182);
@@ -181,7 +181,7 @@ li {
     background-color: rgb(136, 150, 27);
 }
 .pokemon-info span.rock {
-    background-color: rgb(127, 113, 56);
+    background-color: rgb(141, 128, 76);
 }
 .pokemon-info span.ghost {
     background-color: rgb(56, 56, 127);
