@@ -258,7 +258,22 @@ let pokemonRepository = (function () {
             
         contentEl.appendChild(pokeInfoDiv);
         modalBody.appendChild(contentEl);
-    }
+    };
+
+    let pokeSearchBar = document.querySelector('#filter');
+
+    pokeSearchBar.addEventListener('input', () => {
+        let pokeListItem = document.querySelectorAll('li');
+        let filter = pokeSearchBar.value.toUpperCase();
+
+		pokeListItem.forEach((listItem) => {
+			if (listItem.innerText.toUpperCase().indexOf(filter) === 0) {
+				listItem.style.display = 'block';
+			} else {
+				listItem.style.display = 'none';
+			}
+        });
+    });
 
     return {
         add: add,
