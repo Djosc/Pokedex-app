@@ -1,8 +1,7 @@
 :root {
-    /* --background-color: #1a1717; */
     --background-color: #181a1b;
-    /* --button-color: #9c0404cb; */
     --button-color: #4a5155;
+    --header-color: #880101;
     --text-color: #ffffff;
     --global-padding: 16px;
 }
@@ -11,7 +10,11 @@ body {
     font-family: 'Lato', sans-serif;
     background-color: var(--background-color);
     color: var(--text-color);
-    padding: var(--global-padding);
+    padding-top: 70px;
+}
+
+.navbar {
+    background-color: var(--header-color);
 }
 
 .modal-header {
@@ -20,19 +23,23 @@ body {
     justify-content: center;
 }
 
-.modal-header .close{
+.modal-header .close {
     position: relative;
-    bottom: 2rem;
+    bottom: 2.5rem;
 }
 
 h5 {
     text-transform: uppercase;
     text-align: center;
-    font-size: 24px
+    font-size: 24px;
 }
 
 @media screen and (max-width: 600px) {
-    h5 { font-size: 16px };
+    h5 { font-size: 16px; };
+}
+
+@media screen and (min-width: 1280px) {
+    h5 { font-size: 28px; };
 }
 
 li {

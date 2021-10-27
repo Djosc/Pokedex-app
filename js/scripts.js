@@ -224,12 +224,7 @@ let pokemonRepository = (function () {
         // clear modal
         modalBody.innerHTML = '';
         modalTitle.innerHTML = '';
-
-        let modalDiv = document.createElement('div');
-        modalDiv.classList.add('modal-info-div');
-
-        let titleEl = document.createElement('h5');
-        titleEl.innerText = name + ` #${id}`;
+        modalTitle.innerText = name + ` #${id}`;
 
         let contentEl = document.createElement('div');
         contentEl.classList.add('pokemon-content');
@@ -262,7 +257,6 @@ let pokemonRepository = (function () {
             }
             
         contentEl.appendChild(pokeInfoDiv);
-        modalTitle.appendChild(titleEl);
         modalBody.appendChild(contentEl);
     }
 
