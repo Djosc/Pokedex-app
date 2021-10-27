@@ -32,7 +32,7 @@ let pokemonRepository = (function () {
     function showDetails(pokemon) {
         loadDetails(pokemon)
             .then(() => {
-                console.log(pokemon);
+                // console.log(pokemon);
                 showModal(pokemon);
             }); 
     }
@@ -99,13 +99,17 @@ let pokemonRepository = (function () {
 
                 let list = document.querySelector('.pokemon-list');
                 let listItem = document.createElement('li');
+                listItem.classList.add('list-group-item');
+                
                 let pokemonButton = document.createElement('button');
+                pokemonButton.classList.add('pokemon-button');
+                pokemonButton.setAttribute('data-toggle', 'modal');
+                pokemonButton.setAttribute('data-target', '#poke-modal');
                 pokemonButton.innerHTML = `
                     <img src="${spriteUrl}" alt="${name}"/>
                     <p>${name}</p>
                 `;
 
-                pokemonButton.classList.add('pokemon-button');
                 listItem.appendChild(pokemonButton);
                 list.appendChild(listItem);
                 addEventListener(pokemonButton, pokemon);
@@ -123,15 +127,14 @@ let pokemonRepository = (function () {
         let resData = await res.json();
         
         pokemon.spriteUrl = resData.sprites.front_default;
-
         return resData;
     }    
 
     /**
      * Fetches further details about a pokemon and adds the new keys (and info) to the 
      * Pokemon object.
+     * This function is called from {@link showDetails}
      * 
-     * @see {@link showDetails} - function is called here
      * @param {Pokemon} pokemon - {@link Pokemon} object
      */
     function loadDetails(pokemon) {
@@ -140,7 +143,6 @@ let pokemonRepository = (function () {
         return fetch(url)
             .then((response) => { return response.json() })
             .then((details) => {
-                // pokemon.artUrl = details.sprites.other.dream_world.front_default;
                 pokemon.artUrl = details.sprites.other['official-artwork'].front_default;
                 pokemon.id = details.id;
                 pokemon.height = details.height;
@@ -154,17 +156,11 @@ let pokemonRepository = (function () {
             });
     }
 
-    /**
-     * A small helper function to get the actual type names because they are nested a couple
-     * layers deep in types.
-     */
     function getTypeNames(types) {
         if (types.length > 1) { 
             return `${types[0].type.name}, ${types[1].type.name}`; 
-            // return `Types: ${types[0].type.name}, ${types[1].type.name}`; 
         }
         return `${types[0].type.name}`;
-        // return `Type: ${types[0].type.name}`;
     }
     
     function convertHeight(height) {
@@ -216,7 +212,6 @@ let pokemonRepository = (function () {
      */
     function showModal(pokemon) {
         let { name, artUrl, id, height, weight, types } = pokemon;
-        
         id = String(id).padStart(3, '0');
         // convert values to feet and pounds
         height = convertHeight(height);
@@ -224,20 +219,16 @@ let pokemonRepository = (function () {
 
         let typeNames = getTypeNames(types);
 
-        let modalContainer = document.querySelector('#modal-container');
+        let modalTitle = document.querySelector('.modal-title');
+        let modalBody = document.querySelector('.modal-body');
         // clear modal
-        modalContainer.innerHTML = '';
+        modalBody.innerHTML = '';
+        modalTitle.innerHTML = '';
 
-        let modal = document.createElement('div');
-        modal.classList.add('modal');
+        let modalDiv = document.createElement('div');
+        modalDiv.classList.add('modal-info-div');
 
-        // add modal content
-        let closeButtonEl = document.createElement('button');
-        closeButtonEl.classList.add('modal-close');
-        closeButtonEl.innerText = 'Close';
-        closeButtonEl.addEventListener('click', hideModal);
-
-        let titleEl = document.createElement('h1');
+        let titleEl = document.createElement('h5');
         titleEl.innerText = name + ` #${id}`;
 
         let contentEl = document.createElement('div');
@@ -251,69 +242,36 @@ let pokemonRepository = (function () {
         pokeInfoDiv.innerHTML = `
             <span class="height">Height: ${height}</span>
             <span class="weight">Weight: ${weight} lbs</span>
-            `
-        contentEl.appendChild(pokeInfoDiv);
-
+        `;
+            
         let typeSpanEl1 = document.createElement('span');
         let typeSpanEl2 = document.createElement('span');
-        if (typeNames.includes(',')) {
-            let typeArr = typeNames.split(',')
-            typeSpanEl1.classList.add(colorType(typeArr[0]));
-            typeSpanEl2.classList.add(colorType(typeArr[1]));
-            typeSpanEl1.innerText = typeArr[0];
-            typeSpanEl2.innerText = typeArr[1];
-            pokeInfoDiv.appendChild(typeSpanEl1);
-            pokeInfoDiv.appendChild(typeSpanEl2);
-        }
-        else {
-            typeSpanEl1.classList.add(colorType(typeNames));
-            typeSpanEl1.innerText = typeNames;
-            pokeInfoDiv.appendChild(typeSpanEl1);
-        }
-
-        modal.appendChild(closeButtonEl);
-        modal.appendChild(titleEl);
-        modal.appendChild(contentEl);
-        modalContainer.appendChild(modal);
-        modalContainer.classList.add('is-visible');
+            if (typeNames.includes(',')) {
+                let typeArr = typeNames.split(',')
+                typeSpanEl1.classList.add(colorType(typeArr[0]));
+                typeSpanEl2.classList.add(colorType(typeArr[1]));
+                typeSpanEl1.innerText = typeArr[0];
+                typeSpanEl2.innerText = typeArr[1];
+                pokeInfoDiv.appendChild(typeSpanEl1);
+                pokeInfoDiv.appendChild(typeSpanEl2);
+            }
+            else {
+                typeSpanEl1.classList.add(colorType(typeNames));
+                typeSpanEl1.innerText = typeNames;
+                pokeInfoDiv.appendChild(typeSpanEl1);
+            }
+            
+        contentEl.appendChild(pokeInfoDiv);
+        modalTitle.appendChild(titleEl);
+        modalBody.appendChild(contentEl);
     }
-
-    function hideModal() {
-        let modalContainer = document.querySelector('#modal-container');
-        modalContainer.classList.remove('is-visible');
-    }
-
-    window.addEventListener('keydown', (e) => {
-        let modalContainer = document.querySelector('#modal-container');
-        if (e.key === 'Escape' && modalContainer.classList.contains('is-visible')) {
-            hideModal();
-        }
-    })
-
-    window.addEventListener('click', (e) => {
-        let modalContainer = document.querySelector('#modal-container')
-        let target = e.target;
-        if (target === modalContainer) {
-            hideModal();
-        }
-    })
 
     return {
-        // * do i need all of these if some of them are only called internally? prob not
         add: add,
         getAll: getAll,
         find: find,
-        showDetails: showDetails,
-        showLoadingMessage: showLoadingMessage,
-        hideLoadingMessage: hideLoadingMessage,
-        addEventListener: addEventListener,
         loadList: loadList,
         addListItem: addListItem,
-        loadSprite: loadSprite,
-        loadDetails: loadDetails,
-        getTypeNames: getTypeNames,
-        showModal: showModal,
-        hideModal: hideModal,
     };
 })();
 
