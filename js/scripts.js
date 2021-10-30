@@ -6,6 +6,10 @@ let pokemonRepository = (function () {
     let pokemonList = [];
     let apiUrl = 'https://pokeapi.co/api/v2/pokemon/?limit=150';
 
+    function getAll() {
+        return pokemonList;
+    }
+
     /**
      * Takes a pokemon object and checks if it contains the correct keys,
      * then adds it to the {@link pokemonList} array.
@@ -21,16 +25,18 @@ let pokemonRepository = (function () {
         }
     }
 
-    function getAll() {
-        return pokemonList;
-    }
-
     function showDetails(pokemon) {
         loadDetails(pokemon)
             .then(() => {
                 // console.log(pokemon);
                 showModal(pokemon);
             });
+    }
+
+    function addEventListener(button, pokemon) {
+        button.addEventListener('click', function (event) {
+            showDetails(pokemon);
+        });
     }
 
     function showLoadingMessage() {
@@ -47,13 +53,6 @@ let pokemonRepository = (function () {
         // setTimeout here so you can actually see the loading message
         // * will probably remove later
         setTimeout(() => loadingDiv.removeChild(loadingText), 300);
-        // loadingDiv.removeChild(loadingText);      
-    }
-
-    function addEventListener(button, pokemon) {
-        button.addEventListener('click', function (event) {
-            showDetails(pokemon);
-        });
     }
 
     /**
@@ -160,6 +159,7 @@ let pokemonRepository = (function () {
      */
     function showModal(pokemon) {
         let { name, artUrl, id, height, weight, types } = pokemon;
+
         id = String(id).padStart(3, '0');
         // convert values to feet and pounds
         height = convertHeight(height);
@@ -210,6 +210,7 @@ let pokemonRepository = (function () {
         modalBody.appendChild(contentEl);
     };
 
+    // Formatting functions for the data displayed on the modal.
     function getTypeNames(types) {
         if (types.length > 1) {
             return `${types[0].type.name}, ${types[1].type.name}`;
@@ -237,15 +238,15 @@ let pokemonRepository = (function () {
         return weight % 1 === 0 ? Math.floor(weight) : weight;
     }
 
-
+    // Diplays pokemon based on the search bar input
     let pokeSearchBar = document.querySelector('#filter');
     pokeSearchBar.addEventListener('input', () => {
         let pokeListItem = document.querySelectorAll('li');
         let filter = pokeSearchBar.value.toUpperCase();
 
         pokeListItem.forEach((listItem) => {
-            if (listItem.innerText.toUpperCase().indexOf(filter) === 0) {
-                listItem.style.display = 'block';
+            if (listItem.innerText.toUpperCase().indexOf(filter) > -1) {
+                listItem.style.display = '';
             } else {
                 listItem.style.display = 'none';
             }
