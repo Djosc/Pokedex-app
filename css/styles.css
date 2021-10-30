@@ -90,31 +90,9 @@ li {
     transform: scale(1.05, 1.05);
 }
 
-#poke-modal-dialog {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 999;
-    overflow: auto;
-    text-align: center;
-    display: grid;
-}
-
-@media screen and (min-width: 600px) {
-    .modal-dialog {
-        max-width: 100%;
-        margin: 0 auto;
-    }
-}
-
-@media screen and (max-width: 1280px) {
-    .modal-dialog {
-        max-width: 100%;
-        margin: 0 auto;
-    }
+.modal-dialog {
+    max-width: 100%;
+    margin: 0 auto;
 }
 
 #poke-modal-content {
@@ -160,7 +138,8 @@ li {
     grid-template-rows: repeat(3, 1fr);
     grid-gap: 1.5rem;
     padding-right: 2rem;
-    font-size: 24px;
+    font-size: 20px;
+    font-family: inherit;
 }
 
 .pokemon-info span {
@@ -215,6 +194,6 @@ li {
     }
 
     .pokemon-info {
-        font-size: 28px;
+        font-size: 24px;
     }
 }
