@@ -25,16 +25,12 @@ let pokemonRepository = (function () {
         return pokemonList;
     }
 
-    function find(pokemonName) {
-        return pokemonList.filter(pokemon => pokemon.name === pokemonName);
-    }
-
     function showDetails(pokemon) {
         loadDetails(pokemon)
             .then(() => {
                 // console.log(pokemon);
                 showModal(pokemon);
-            }); 
+            });
     }
 
     function showLoadingMessage() {
@@ -50,7 +46,7 @@ let pokemonRepository = (function () {
         let loadingText = document.querySelector('.loading-text');
         // setTimeout here so you can actually see the loading message
         // * will probably remove later
-        setTimeout(() => loadingDiv.removeChild(loadingText), 300);    
+        setTimeout(() => loadingDiv.removeChild(loadingText), 300);
         // loadingDiv.removeChild(loadingText);      
     }
 
@@ -78,7 +74,7 @@ let pokemonRepository = (function () {
                 });
                 hideLoadingMessage();
             })
-            .catch((e) => { 
+            .catch((e) => {
                 console.error(e);
                 hideLoadingMessage();
             });
@@ -100,7 +96,7 @@ let pokemonRepository = (function () {
                 let list = document.querySelector('.pokemon-list');
                 let listItem = document.createElement('li');
                 listItem.classList.add('list-group-item');
-                
+
                 let pokemonButton = document.createElement('button');
                 pokemonButton.classList.add('pokemon-button');
                 pokemonButton.setAttribute('data-toggle', 'modal');
@@ -125,10 +121,10 @@ let pokemonRepository = (function () {
     async function loadSprite(pokemon) {
         let res = await fetch(pokemon.detailsUrl);
         let resData = await res.json();
-        
+
         pokemon.spriteUrl = resData.sprites.front_default;
         return resData;
-    }    
+    }
 
     /**
      * Fetches further details about a pokemon and adds the new keys (and info) to the 
@@ -150,58 +146,10 @@ let pokemonRepository = (function () {
                 pokemon.types = details.types;
                 hideLoadingMessage();
             })
-            .catch((e) => { 
+            .catch((e) => {
                 console.error(e);
                 hideLoadingMessage();
             });
-    }
-
-    function getTypeNames(types) {
-        if (types.length > 1) { 
-            return `${types[0].type.name}, ${types[1].type.name}`; 
-        }
-        return `${types[0].type.name}`;
-    }
-    
-    function convertHeight(height) {
-        // convert height to feet w/ decimal
-        height = ((height / 10) * 3.28).toFixed(2); 
-        // separate out the decimal and convert to inches
-        let whole = Math.floor(height); 
-        let dec = Math.round((height - whole) * 12);
-
-        dec = String(dec).padStart(2, '0');
-        let returnString = ``;
-        // round up inches to the next foot
-        returnString = dec === '12' ? `${whole + 1}' 00"` : `${whole}' ${dec}"`;
-
-        return returnString;
-    }
-
-    function convertWeight(weight) {
-        weight = ((weight / 10) * 2.2).toFixed(1);
-        return weight % 1 === 0 ? Math.floor(weight) : weight;
-    }
-
-    function colorType(typeNames) {
-        if (typeNames.includes('fire')) return 'fire';
-        if (typeNames.includes('bug')) return 'bug';
-        if (typeNames.includes('dragon')) return 'dragon';
-        if (typeNames.includes('electric')) return 'electric';
-        if (typeNames.includes('fighting')) return 'fighting';
-        if (typeNames.includes('flying')) return 'flying';
-        if (typeNames.includes('ghost')) return 'ghost';
-        if (typeNames.includes('grass')) return 'grass';
-        if (typeNames.includes('ground')) return 'ground';
-        if (typeNames.includes('ice')) return 'ice';
-        if (typeNames.includes('normal')) return 'normal';
-        if (typeNames.includes('poison')) return 'poison';
-        if (typeNames.includes('psychic')) return 'psychic';
-        if (typeNames.includes('rock')) return 'rock';
-        if (typeNames.includes('water')) return 'water';
-        if (typeNames.includes('fairy')) return 'fairy';
-        if (typeNames.includes('steel')) return 'steel';
-        else return 'types';
     }
 
     /**
@@ -238,47 +186,75 @@ let pokemonRepository = (function () {
             <span class="height">Height: ${height}</span>
             <span class="weight">Weight: ${weight} lbs</span>
         `;
-            
+
+        // creates individual spans for the types
+        //  and adds the type name as a class to be targeted in the CSS
         let typeSpanEl1 = document.createElement('span');
         let typeSpanEl2 = document.createElement('span');
-            if (typeNames.includes(',')) {
-                let typeArr = typeNames.split(',')
-                typeSpanEl1.classList.add(colorType(typeArr[0]));
-                typeSpanEl2.classList.add(colorType(typeArr[1]));
-                typeSpanEl1.innerText = typeArr[0];
-                typeSpanEl2.innerText = typeArr[1];
-                pokeInfoDiv.appendChild(typeSpanEl1);
-                pokeInfoDiv.appendChild(typeSpanEl2);
-            }
-            else {
-                typeSpanEl1.classList.add(colorType(typeNames));
-                typeSpanEl1.innerText = typeNames;
-                pokeInfoDiv.appendChild(typeSpanEl1);
-            }
-            
+        if (typeNames.includes(',')) {
+            let typeArr = typeNames.split(',')
+            typeSpanEl1.classList.add(typeArr[0]);
+            typeSpanEl2.classList.add(typeArr[1].trim());
+            typeSpanEl1.innerText = typeArr[0];
+            typeSpanEl2.innerText = typeArr[1].trim();
+            pokeInfoDiv.appendChild(typeSpanEl1);
+            pokeInfoDiv.appendChild(typeSpanEl2);
+        }
+        else {
+            typeSpanEl1.classList.add(typeNames);
+            typeSpanEl1.innerText = typeNames;
+            pokeInfoDiv.appendChild(typeSpanEl1);
+        }
+
         contentEl.appendChild(pokeInfoDiv);
         modalBody.appendChild(contentEl);
     };
 
-    let pokeSearchBar = document.querySelector('#filter');
+    function getTypeNames(types) {
+        if (types.length > 1) {
+            return `${types[0].type.name}, ${types[1].type.name}`;
+        }
+        return `${types[0].type.name}`;
+    }
 
+    function convertHeight(height) {
+        // convert height to feet w/ decimal
+        height = ((height / 10) * 3.28).toFixed(2);
+        // separate out the decimal and convert to inches
+        let whole = Math.floor(height);
+        let dec = Math.round((height - whole) * 12);
+
+        dec = String(dec).padStart(2, '0');
+        let returnString = ``;
+        // round up inches to the next foot
+        returnString = dec === '12' ? `${whole + 1}' 00"` : `${whole}' ${dec}"`;
+
+        return returnString;
+    }
+
+    function convertWeight(weight) {
+        weight = ((weight / 10) * 2.2).toFixed(1);
+        return weight % 1 === 0 ? Math.floor(weight) : weight;
+    }
+
+
+    let pokeSearchBar = document.querySelector('#filter');
     pokeSearchBar.addEventListener('input', () => {
         let pokeListItem = document.querySelectorAll('li');
         let filter = pokeSearchBar.value.toUpperCase();
 
-		pokeListItem.forEach((listItem) => {
-			if (listItem.innerText.toUpperCase().indexOf(filter) === 0) {
-				listItem.style.display = 'block';
-			} else {
-				listItem.style.display = 'none';
-			}
+        pokeListItem.forEach((listItem) => {
+            if (listItem.innerText.toUpperCase().indexOf(filter) === 0) {
+                listItem.style.display = 'block';
+            } else {
+                listItem.style.display = 'none';
+            }
         });
     });
 
     return {
         add: add,
         getAll: getAll,
-        find: find,
         loadList: loadList,
         addListItem: addListItem,
     };
