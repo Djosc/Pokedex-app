@@ -21,14 +21,13 @@ let pokemonRepository = (function () {
             pokemonList.push(pokemon);
         }
         else {
-            console.log(`Pokemon does not contain expected values`);
+            console.error(`Pokemon does not contain expected values`);
         }
     }
 
     function showDetails(pokemon) {
         loadDetails(pokemon)
             .then(() => {
-                // console.log(pokemon);
                 showModal(pokemon);
             });
     }
@@ -269,4 +268,4 @@ pokemonRepository.loadList()
     .then(() => {
         pokemonRepository.getAll().forEach((pokemon) => pokemonRepository.addListItem(pokemon));
     })
-    .catch((e) => console.log(`this broken`));
+    .catch((e) => console.error(`e`));
