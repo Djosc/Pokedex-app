@@ -133,7 +133,6 @@ let pokemonRepository = (function () {
      * @param {Pokemon} pokemon - {@link Pokemon} object
      */
     function loadDetails(pokemon) {
-        showLoadingMessage();
         let url = pokemon.detailsUrl;
         return fetch(url)
             .then((response) => { return response.json() })
@@ -143,11 +142,9 @@ let pokemonRepository = (function () {
                 pokemon.height = details.height;
                 pokemon.weight = details.weight;
                 pokemon.types = details.types;
-                hideLoadingMessage();
             })
             .catch((e) => {
                 console.error(e);
-                hideLoadingMessage();
             });
     }
 
@@ -260,6 +257,13 @@ let pokemonRepository = (function () {
         addListItem: addListItem,
     };
 })();
+
+let scrollButton = document.getElementById('btn-to-top');
+scrollButton.addEventListener('click', toTop);
+function toTop() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+}
 
 pokemonRepository.loadList()
     .then(() => {
